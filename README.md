@@ -36,7 +36,7 @@ To install the package, choose one of the following:
 The following snippet shows how to easily calculate the number of `identical` and `nearly identical` sentences of a document to a `sentence`.
 
 ```
-from identical_sentence_counter.sentence_counter import SentenceCounter.
+from identical_sentence_counter.sentence_counter import SentenceCounter
 
 sentence_counter = SentenceCounter(<path_to_document>)
 
