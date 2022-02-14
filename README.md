@@ -24,7 +24,7 @@ This package provides a way to count the number of `identical` and `nearly ident
 
 To install the package, choose one of the following:
 
-1. Simply `pip install 
+1. Simply `pip install https://github.com/kstavro/identical-sentence-counter.git`
 
 2. If you want to further develop the package at the same time, then
 - git clone the repo
