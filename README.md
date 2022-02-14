@@ -1,5 +1,5 @@
 # Identical Sentence Counter
-This is a playground package.
+The purpose of this package is to showcase some of Python's best practices.
 
 ## Contents
 
