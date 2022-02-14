@@ -1,8 +1,7 @@
-# %%
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Author: Konstantinos Stavropoulos <k.stavropoulos@oxolo.com>
+# Author: Konstantinos Stavropoulos <konstantinos.stavrop@gmail.com>
 # For License information, see corresponding LICENSE file.
 """This file provides functions that compare whether two lists of words (strings) are identical or nearly identical, 
 as well as a function that better formats a list of lists for faster retrieval."""
