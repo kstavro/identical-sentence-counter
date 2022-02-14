@@ -5,12 +5,24 @@ import unittest
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
-from sentence_counter.comparison_utils import (
+from identical_sentence_counter.comparison_utils import (
+    sort_list_of_lists_lengthwise,
     wordlists_are_identical,
     wordlists_are_nearly_identical,
 )
 
 logger = logging.getLogger(__name__)
+
+sentences_list = [
+    ["hello", "world"],
+    ["hello", "universe"],
+    ["this", "is", "incai"],
+]
+target_sentence_dict = {
+    2: [["hello", "world"], ["hello", "universe"]],
+    3: [["this", "is", "incai"]],
+}
+
 
 test_wordlist = ["hello", "world"]
 candidates_for_identical = [
@@ -26,6 +38,11 @@ candidates_for_nearly_identical = [
 
 
 class TestComparisonUtils(unittest.TestCase):
+    def test_sort_list_of_lists_lengthwise(self):
+        self.assertEqual(
+            sort_list_of_lists_lengthwise(sentences_list), target_sentence_dict
+        )
+
     def test_wordlists_are_identical(self):
         for sentence, ground_truth in candidates_for_identical:
             self.assertEqual(
@@ -34,7 +51,7 @@ class TestComparisonUtils(unittest.TestCase):
 
     def test_wordlists_are_nearly_identical(self):
         # check that error raises appropriately
-        with self.assertRaises(ValueError):
+        with self.assertRaises(AssertionError):
             wordlists_are_nearly_identical("hello", test_wordlist)
 
         # check specific case of list of length 1 vs empty list

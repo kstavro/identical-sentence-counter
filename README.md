@@ -9,9 +9,7 @@ This is a playground package.
 
 * [Functionality Walkthrough](#functionality-walkthrough)
 
-* [Additional attributes for Spacy](#additional-attributes-for-spacy)
-
-* [Details](#details)
+* [Tests](#tests)
 
 * [Changelog](#changelog)
 
@@ -35,12 +33,29 @@ To install the package, choose one of the following:
 
 ## Functionality Walkthrough
 
-## Details
+The following snippet shows how to easily calculate the number of `identical` and `nearly identical` sentences of a document to a `sentence`.
 
-This section is reserved to describe more in detail what each function in the whole code does. To be updated in the
-future.
+```
+from identical_sentence_counter.sentence_counter import SentenceCounter.
+
+sentence_counter = SentenceCounter(<path_to_document>)
+
+sentence_counter.query(sentence)
+```
+
+Notice that the `SentenceCounter` class can accept both strings corresponding to absolute paths, as well as `pathlib.Path` objects.
+
+## Unittests
+
+To run the unittests yourself, follow option 2. from 
+[Install](#install) and once inside the package's folder, do the following:
+
+```
+pip install -r requirements.txt # only the first time required
+pytest -v --cov=identical_sentence_counter --cov-report=term-missing
+```
 
 ## Changelog
 
 * 0.0.1: 
-- [X] Initial implementation of the pachage.
+- [X] Initial implementation of the package.

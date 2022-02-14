@@ -3,11 +3,11 @@ pytest
 pytest-cov
 
 # Requirements for documentation
-docutils
-Sphinx
-sphinxcontrib-napoleon
-sphinxcontrib-websupport
-sphinx_rtd_theme
-m2r2
+# docutils
+# Sphinx
+# sphinxcontrib-napoleon
+# sphinxcontrib-websupport
+# sphinx_rtd_theme
+# m2r2
 
 # Requirements for project
