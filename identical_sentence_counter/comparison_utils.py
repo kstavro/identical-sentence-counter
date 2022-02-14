@@ -37,9 +37,6 @@ def sort_list_of_lists_lengthwise(
         (length, list(lst)) for length, lst in groupby(list_of_lists, key=len)
     )
     # sort dict by key
-    # new_data_structure = sorted(
-    #     new_data_structure.items(), key=lambda kv: (kv[0], kv[1])
-    # )
     new_data_structure = dict(sorted(new_data_structure.items()))
     return new_data_structure
 
