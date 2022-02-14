@@ -9,13 +9,9 @@
 (punctuation) character, it provides a method that calculates the number of identical and nearly identical sentences
 inside the document to a queried sentence."""
 
-# import os
-# import sys
 import logging
 from typing import Tuple, List, Union
 from pathlib import Path
-
-# sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
 from identical_sentence_counter.comparison_utils import (
     sort_list_of_lists_lengthwise,
