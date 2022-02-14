@@ -2,7 +2,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Author: Konstantinos Stavropoulos <k.stavropoulos@oxolo.com>
+# Author: Konstantinos Stavropoulos <konstantinos.stavrop@gmail.com>
 # For License information, see corresponding LICENSE file.
 
 """This file contains a class that given a text document that contains only lower case alphabet, space and .
