@@ -33,4 +33,4 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest -v --cov=identical_sentence_counter --cov-report=term-missing
+        pytest -v --cov=identical_sentence_counter --cov-report=term-missing --cov-report html:tests/coverage --junit-xml=tests/report.xml tests
