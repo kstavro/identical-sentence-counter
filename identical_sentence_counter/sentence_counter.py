@@ -36,7 +36,7 @@ class SentenceCounter:
 
         Args:
             doc_input (Union[Path, str]): The input document. Can be given both as
-                a sting or Path object that denotes a file path.
+                a string or Path object that denotes a file path.
             max_number_sequences (int): maximum number of sentences the document is allowed to have.
                 Defaults to 100.000.
         """
@@ -52,14 +52,16 @@ class SentenceCounter:
             logger.info("Input text is not lowercase. Converted to lowercase.")
         self.text = text.strip()
 
-        # get text's sentences as a list of lists of words
+        # get text's sentences as a list of tuples of words
         sentences = self._sentencize(self.text)
 
         # check if the text is too long in terms of number of sentences
         self.max_number_sentences = max_number_sentences
         if len(sentences) > self.max_number_sentences:
             raise ValueError(
-                "Input Document has more than 100.000 sentences. Please replace it with a smaller document."
+                "Input Document has more than {} sentences. Please replace it with a smaller document.".format(
+                    self.max_number_sentences
+                )
             )
 
         # create cardinality dictionaries of original document sentences and document sentences missing one word
@@ -91,7 +93,7 @@ class SentenceCounter:
 
     @staticmethod
     def _sentencize(text: str) -> List[Tuple[str]]:
-        """Splits the instantiated text to sentences in the form of list of words.
+        """Splits the instantiated text to sentences in the form of tuple of words.
         Returns a list of tuples of words."""
         sentences = [
             tuple(sentence.split())
