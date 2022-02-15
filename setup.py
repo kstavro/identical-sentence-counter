@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name="identical_sentence_counter",
-    version="0.0.1",
+    version="0.0.2",
     author="Konstantinos Stavropoulos",
     author_email="konstantinos.stavrop@gmail.com",
     licence = "MIT",

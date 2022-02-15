@@ -1,3 +1,6 @@
+[![CI](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml/badge.svg)](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml)
+
 # Identical Sentence Counter
 The purpose of this package is to showcase some of Python's best practices.
 
@@ -47,7 +50,7 @@ Notice that the `SentenceCounter` class can accept both strings corresponding to
 
 ## Unittests
 
-To run the unittests yourself, follow option 2. from 
+In case you would like to run the unittests yourself, follow option 2. from 
 [Install](#install) and once inside the package's folder, do the following:
 
 ```
@@ -56,6 +59,9 @@ pytest -v --cov=identical_sentence_counter --cov-report=term-missing
 ```
 
 ## Changelog
+
+* 0.0.2: 
+- [X] Updated class data structures for faster queries.
 
 * 0.0.1: 
 - [X] Initial implementation of the package.

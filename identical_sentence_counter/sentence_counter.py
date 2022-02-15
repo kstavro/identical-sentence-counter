@@ -13,10 +13,10 @@ import logging
 from typing import Tuple, List, Union
 from pathlib import Path
 
-from identical_sentence_counter.comparison_utils import (
-    sort_list_of_lists_lengthwise,
-    wordlists_are_identical,
-    wordlists_are_nearly_identical,
+from identical_sentence_counter.data_structures import (
+    get_duplicate_free_list_of_subtuples,
+    create_cardinality_dict_for_doc_sentences,
+    create_cardinality_dict_for_smaller_doc_sentences,
 )
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class SentenceCounter:
 
         Args:
             doc_input (Union[Path, str]): The input document. Can be given both as
-                a sting or Path object that denotes a file path.
+                a string or Path object that denotes a file path.
             max_number_sequences (int): maximum number of sentences the document is allowed to have.
                 Defaults to 100.000.
         """
@@ -52,20 +52,28 @@ class SentenceCounter:
             logger.info("Input text is not lowercase. Converted to lowercase.")
         self.text = text.strip()
 
-        # get text's sentences as a list of lists of words
+        # get text's sentences as a list of tuples of words
         sentences = self._sentencize(self.text)
 
         # check if the text is too long in terms of number of sentences
         self.max_number_sentences = max_number_sentences
         if len(sentences) > self.max_number_sentences:
             raise ValueError(
-                "Input Document has more than 100.000 sentences. Please replace it with a smaller document."
+                "Input Document has more than {} sentences. Please replace it with a smaller document.".format(
+                    self.max_number_sentences
+                )
             )
 
-        # reorganize sentences into a dict according to list (sentence) lengths
-        self.sentences_dict = sort_list_of_lists_lengthwise(sentences)
+        # create cardinality dictionaries of original document sentences and document sentences missing one word
+        # (with tuples of words as keys)
+        self.cardinality_dict_for_doc_sentences = (
+            create_cardinality_dict_for_doc_sentences(sentences)
+        )
+        self.cardinality_dict_for_smaller_doc_sentences = (
+            create_cardinality_dict_for_smaller_doc_sentences(sentences)
+        )
 
-        logger.info("Document and sentence data structure loaded")
+        logger.info("Document and sentence data structures loaded")
 
     @staticmethod
     def _validate_class_input(doc_input: str, max_number_sentences: int):
@@ -84,11 +92,11 @@ class SentenceCounter:
             )
 
     @staticmethod
-    def _sentencize(text: str) -> List[List[str]]:
-        """Splits the instantiated text to sentences in the form of list of words.
-        Returns a list of lists of words."""
+    def _sentencize(text: str) -> List[Tuple[str]]:
+        """Splits the instantiated text to sentences in the form of tuple of words.
+        Returns a list of tuples of words."""
         sentences = [
-            sentence.split()
+            tuple(sentence.split())
             for sentence in text.split(".")
             if sentence and not sentence.isspace()
         ]
@@ -102,41 +110,26 @@ class SentenceCounter:
                 "Input sentence should be str, while it is {}".format(type(sentence))
             )
 
-    def get_number_identical_wordlists(self, wordlist: List[str]) -> int:
-        """Returns the number of identical lists of words of the document to the input wordlist
-        (only looking inside the sentences from self.sentence_dict that match the input's length)"""
+    def _get_number_identical_wordtuples(self, wordtuple: Tuple[str]) -> int:
+        """Returns the number of identical lists of words of the document to the input wordtuple"""
         return (
-            sum(
-                wordlists_are_identical(wordlist, sentence)
-                for sentence in self.sentences_dict.get(len(wordlist))
-            )
-            if len(wordlist) in self.sentences_dict.keys()
-            else 0
+            self.cardinality_dict_for_doc_sentences.get(wordtuple, 0)
+            # if wordtuple in self.cardinality_dict_for_doc_sentences.keys()
+            # else 0
         )
 
-    def get_number_smaller_identical_wordlists(self, wordlist: List[str]) -> int:
-        """Returns the number of nearly identical lists of words of the document to the input wordlist
-        (only looking inside the sentences from self.sentence_dict that have length one less that the input's length)"""
-        return (
-            sum(
-                wordlists_are_nearly_identical(wordlist, sentence)
-                for sentence in self.sentences_dict.get(len(wordlist) - 1)
-            )
-            if len(wordlist) - 1 in self.sentences_dict.keys()
-            else 0
+    def _get_number_smaller_identical_wordtuples(self, wordtuple: Tuple[str]) -> int:
+        """Returns the number of smaller nearly identical tuples of words of the document to the input wordtuple"""
+        return sum(
+            self.cardinality_dict_for_doc_sentences.get(smaller_tuple, 0)
+            for smaller_tuple in get_duplicate_free_list_of_subtuples(wordtuple)
         )
 
-    def get_number_larger_identical_wordlists(self, wordlist: List[str]) -> int:
-        """Returns the number of nearly identical lists of words of the document to the input wordlist
+    def _get_number_larger_identical_wordtuples(self, wordtuple: Tuple[str]) -> int:
+        """Returns the number of nearly identical tuples of words of the document to the input wordtuple
         (only looking inside the sentences from self.sentence_dict that have length one more that the input's length)"""
-        return (
-            sum(
-                wordlists_are_nearly_identical(sentence, wordlist)
-                for sentence in self.sentences_dict.get(len(wordlist) + 1)
-            )
-            if len(wordlist) + 1 in self.sentences_dict.keys()
-            else 0
-        )
+
+        return self.cardinality_dict_for_smaller_doc_sentences.get(wordtuple, 0)
 
     def query(self, sentence: str) -> Tuple[int, int]:
         """Returns the number of identical and nearly identical sentences to the input sentence.
@@ -156,22 +149,22 @@ class SentenceCounter:
                 "Input query sentence is not lowercase. Converted to lowercase."
             )
 
-        queried_sentence_wordlist = self._sentencize(sentence)[0]
+        queried_sentence_wordtuple = self._sentencize(sentence)[0]
 
-        number_identical_wordlists = self.get_number_identical_wordlists(
-            queried_sentence_wordlist
+        number_identical_wordtuples = self._get_number_identical_wordtuples(
+            queried_sentence_wordtuple
         )
 
-        number_smaller_nearly_identical_wordlists = (
-            self.get_number_smaller_identical_wordlists(queried_sentence_wordlist)
+        number_smaller_nearly_identical_wordtuples = (
+            self._get_number_smaller_identical_wordtuples(queried_sentence_wordtuple)
         )
-        number_larger_nearly_identical_wordlists = (
-            self.get_number_larger_identical_wordlists(queried_sentence_wordlist)
+        number_larger_nearly_identical_wordtuples = (
+            self._get_number_larger_identical_wordtuples(queried_sentence_wordtuple)
         )
 
         # total number of nearly identical
-        number_nearly_identical_wordlists = (
-            number_smaller_nearly_identical_wordlists
-            + number_larger_nearly_identical_wordlists
+        number_nearly_identical_wordtuples = (
+            number_smaller_nearly_identical_wordtuples
+            + number_larger_nearly_identical_wordtuples
         )
-        return number_identical_wordlists, number_nearly_identical_wordlists
+        return number_identical_wordtuples, number_nearly_identical_wordtuples
