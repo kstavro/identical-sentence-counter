@@ -47,6 +47,8 @@ Notice that the `SentenceCounter` class can accept both strings corresponding to
 
 ## Unittests
 
+If the CI pipeline is not yet installed inside the repository for unittest automation, you can still run them yourself.
+
 To run the unittests yourself, follow option 2. from 
 [Install](#install) and once inside the package's folder, do the following:
 
@@ -56,6 +58,9 @@ pytest -v --cov=identical_sentence_counter --cov-report=term-missing
 ```
 
 ## Changelog
+
+* 0.0.2: 
+- [X] Updated class data structures for faster queries.
 
 * 0.0.1: 
 - [X] Initial implementation of the package.

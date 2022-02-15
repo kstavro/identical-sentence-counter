@@ -5,63 +5,41 @@ import unittest
 
 sys.path.append(os.path.abspath(os.path.join(__file__, "../..")))
 
-from identical_sentence_counter.comparison_utils import (
-    sort_list_of_lists_lengthwise,
-    wordlists_are_identical,
-    wordlists_are_nearly_identical,
+from identical_sentence_counter.data_structures import (
+    get_duplicate_free_list_of_subtuples,
+    create_cardinality_dict_for_doc_sentences,
+    create_cardinality_dict_for_smaller_doc_sentences,
 )
 
 logger = logging.getLogger(__name__)
 
 sentences_list = [
-    ["hello", "world"],
-    ["hello", "universe"],
-    ["this", "is", "incai"],
+    ("hello", "world"),
+    ("hello", "universe"),
+    ("this", "is", "incai"),
+    ("hello", "world")
 ]
-target_sentence_dict = {
-    2: [["hello", "world"], ["hello", "universe"]],
-    3: [["this", "is", "incai"]],
-}
+target_cardinality_dict_for_sentences = {('hello', 'world'): 2, ('hello', 'universe'): 1, ('this', 'is', 'incai'): 1}
+target_cardinality_dict_for_smaller_sentences = {('hello',): 3, ('world',): 2, ('universe',): 1, ('is', 'incai'): 1, ('this', 'incai'): 1, ('this', 'is'): 1}
 
-
-test_wordlist = ["hello", "world"]
-candidates_for_identical = [
-    (["hello", "world"], True),
-    (["world", "hello"], False),
-    (["hello", "universe"], False),
-]
-candidates_for_nearly_identical = [
-    (["this", "is", "incai"], False),
-    (["hello", "great", "world"], True),
-    (["hello", "world", "championship"], True),
-]
-
+test_wordtuple = ("hello", "hello", "world")
+target_subtuple_list = [('hello', 'world'), ('hello', 'hello')]
 
 class TestComparisonUtils(unittest.TestCase):
-    def test_sort_list_of_lists_lengthwise(self):
+    def testget_duplicate_free_list_of_subtuples(self):
         self.assertEqual(
-            sort_list_of_lists_lengthwise(sentences_list), target_sentence_dict
+            get_duplicate_free_list_of_subtuples(test_wordtuple), target_subtuple_list
         )
 
-    def test_wordlists_are_identical(self):
-        for sentence, ground_truth in candidates_for_identical:
-            self.assertEqual(
-                wordlists_are_identical(sentence, test_wordlist), ground_truth
-            )
+    def test_create_cardinality_dict_for_doc_sentences(self):
+        self.assertEqual(
+            create_cardinality_dict_for_doc_sentences(sentences_list), target_cardinality_dict_for_sentences
+        )
 
-    def test_wordlists_are_nearly_identical(self):
-        # check that error raises appropriately
-        with self.assertRaises(AssertionError):
-            wordlists_are_nearly_identical("hello", test_wordlist)
-
-        # check specific case of list of length 1 vs empty list
-        self.assertTrue(wordlists_are_nearly_identical(["hello"], []))
-
-        for sentence, ground_truth in candidates_for_nearly_identical:
-            self.assertEqual(
-                wordlists_are_nearly_identical(sentence, test_wordlist), ground_truth
-            )
-
+    def test_create_cardinality_dict_for_smaller_doc_sentences(self):
+        self.assertEqual(
+            create_cardinality_dict_for_smaller_doc_sentences(sentences_list), target_cardinality_dict_for_smaller_sentences
+        )
 
 if __name__ == "__main__":
     logging.basicConfig(
