@@ -1,4 +1,5 @@
 [![CI](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml/badge.svg)](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml)
+[![Coverage](https://img.shields.io/codecov/c/github/kstavro/identical-sentence-counter)](https://github.com/kstavro/identical-sentence-counter/actions/workflows/python-app.yml)
 
 # Identical Sentence Counter
 The purpose of this package is to showcase some of Python's best practices.
