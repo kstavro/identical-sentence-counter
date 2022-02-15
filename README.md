@@ -50,9 +50,7 @@ Notice that the `SentenceCounter` class can accept both strings corresponding to
 
 ## Unittests
 
-If the CI pipeline is not yet installed inside the repository for unittest automation, you can still run them yourself.
-
-To run the unittests yourself, follow option 2. from 
+In case you would like to run the unittests yourself, follow option 2. from 
 [Install](#install) and once inside the package's folder, do the following:
 
 ```
